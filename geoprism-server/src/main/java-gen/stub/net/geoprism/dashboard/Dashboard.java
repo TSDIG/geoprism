@@ -1213,25 +1213,22 @@ public class Dashboard extends DashboardBase implements com.runwaysdk.generation
     GeoNode[] nodes = this.getGeoNodes(thematicAttribute);
     for (GeoNode node : nodes)
     {
-      if (aggregatable || ( node instanceof GeoNodeGeometry ))
+      try
       {
-        try
-        {
-          JSONObject nodeJSON = new JSONObject();
-          nodeJSON.put("id", node.getId());
-          nodeJSON.put("type", node.getType());
-          nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
-          nodesArr.put(nodeJSON);
-        }
-        catch (JSONException e)
-        {
-          String error = "Could not build GeoNode JSON.";
-          throw new ProgrammingErrorException(error, e);
-        }
+        JSONObject nodeJSON = new JSONObject();
+        nodeJSON.put("id", node.getId());
+        nodeJSON.put("type", node.getType());
+        nodeJSON.put("displayLabel", node.getGeoEntityAttribute().getDisplayLabel());
+        nodesArr.put(nodeJSON);
+      }
+      catch (JSONException e)
+      {
+        String error = "Could not build GeoNode JSON.";
+        throw new ProgrammingErrorException(error, e);
       }
     }
 
-    if (aggregatable && nodesArr.length() == 0)
+    if (nodesArr.length() == 0)
     {
       throw new UnsupportedAggregationException();
     }
